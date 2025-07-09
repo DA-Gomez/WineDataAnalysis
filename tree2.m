@@ -1,0 +1,19 @@
+function out = tree2(wines)
+
+classLabels = categorical(wines.quality > 5, [false, true], {'bad', 'good'});
+
+selectedVars = {'alcohol', 'density', 'volatileAcidity', 'chlorides', 'fixedAcidity'};
+
+features = wines{:, selectedVars};
+
+% Train the decision tree with complexity control
+treeModel = fitctree(features, classLabels, ...
+    'PredictorNames', selectedVars, ...
+    'MaxNumSplits', 12, ...     % Maximum number of splits
+    'MinLeafSize', 25);         % Minimum samples per leaf
+
+% pruning for even simpler tree
+% prunedTree = prune(treeModel, 'Level', 3);
+% view(prunedTree, 'Mode', 'graph');
+
+view(treeModel, 'Mode', 'graph');
