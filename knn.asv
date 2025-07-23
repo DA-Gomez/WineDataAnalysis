@@ -1,0 +1,37 @@
+function out = knn(wines)
+
+    feature_names = wines.Properties.VariableNames;
+    feature_names(strcmp(feature_names, 'quality')) = [];
+    
+    for i = 1:numel(feature_names) % Min-max normalization
+        col = wines.(feature_names{i});
+        min_col = min(col);
+        max_col = max(col);
+        wines.(feature_names{i}) = (col - min_col) / (max_col - min_col);
+    end
+    
+    % Split into features (X) and target (Y)
+    X = table2array(wines(:, feature_names));
+    Y = table2array(wines(:, 'quality'));
+    
+    % Set random seed for reproducibility
+    rng(1);
+    
+    % Split into train (70%) and test (30%)
+    cv = cvpartition(length(Y), 'HoldOut', 0.3);
+    X_train = X(training(cv), :);
+    Y_train = Y(training(cv));
+    X_test = X(test(cv), :);
+    Y_test = Y(test(cv));
+    
+    % Fit KNN classifier (k=5)
+    k = 5;
+    knn = fitcknn(X_train, Y_train, 'NumNeighbors', k);
+    
+    % Predict on test set
+    Y_pred = predict(knn, X_test);
+    
+    % Calculate accuracy
+    accuracy = sum(Y_pred == Y_test) / length(Y_test);
+    
+    fprintf('Test set accuracy: %.2f%%\n', accuracy*100);

@@ -21,8 +21,8 @@ fprintf('P(bad): %.3f, P(good): %.3f\n', p_bad, p_good);
 entropy_quality = -(p_bad*log2(p_bad) + p_good*log2(p_good));
 gini_quality = 1 - p_bad^2 - p_good^2;
 
-print("Alcohol analysis")
-processData(wines.alcohol, entropy_quality, good_quality, bad_quality)
+% processData(wines.alcohol, entropy_quality, good_quality, bad_quality)
+%alcohol
 %IG: 0.104, gini: 0.404
 
 %density
