@@ -7,7 +7,7 @@ function out = knn(XTrain, YTrain, XTest, YTest)
     prediction = predict(knn, XTest); %predict y
     
     accuracy = sum(prediction == YTest) / length(YTest);
-    
+     
     fprintf('Test set accuracy: %.2f%%\n', accuracy*100);
 
     confmat = confusionmat(YTest, prediction); %build confusion matrix

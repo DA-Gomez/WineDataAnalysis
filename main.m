@@ -3,25 +3,6 @@ red= readtable('./files/winequality-red.csv', 'VariableNamingRule', 'preserve');
 
 wines = cleanData(red, white);
 
-
-
-% % Wine properties
-% quality = wines.quality;
-% n_total = height(wines);
-% bad_quality = quality <= 5;
-% good_quality = quality > 5;
-% 
-% p_bad = sum(bad_quality) / n_total;
-% p_good = sum(good_quality) / n_total;
-% 
-% fprintf('Total: %d, Bad: %d, Good: %d\n', n_total, sum(bad_quality), sum(good_quality));
-% fprintf('P(bad): %.3f, P(good): %.3f\n', p_bad, p_good);
-% 
-% % split test on quality (needed?)
-% entropy_quality = -(p_bad*log2(p_bad) + p_good*log2(p_good));
-% gini_quality = 1 - p_bad^2 - p_good^2;
-% 
-
 fprintf('\nAlcohol:\n')
 processData(wines.alcohol, wines.quality)
 
@@ -65,13 +46,15 @@ processData(wines.("citric acid"), wines.quality)
 fprintf('\nfixedAcidity:\n')
 processData(wines.("fixed acidity"), wines.quality)
 
+NewTree();
+
 edges = [3, 5, 7, 9]; % Define the edges like R did
 labels = {'low', 'medium', 'high'}; % Custom labels
 wines.quality = discretize(wines.quality, edges, 'categorical', labels);
 wines = removevars(wines, 'type');
 
 rng(123);
-X = wines{:, 1:end-1}; % All columns except quality
+X = wines{:, 1:end-1}; % All column s except quality
 Y = wines.quality;
 
 X = (X - min(X)) ./ (max(X) - min(X));
@@ -86,6 +69,10 @@ YTest  = Y(test(cv), :);
 hold on
 fprintf("\nKNN metrics: \n")
 knn(XTrain, YTrain, XTest, YTest);
+fprintf("\nHyperparameter Random Forest metrics: \n")
+knnHyp(XTrain, YTrain, XTest, YTest);
 fprintf("\nRandom Forest metrics: \n")
 randomForest(XTrain, YTrain, XTest, YTest);
+fprintf("\nHyperparameter Random Forest metrics: \n")
+randomForestHyper(XTrain, YTrain, XTest, YTest);
 hold off
